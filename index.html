@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
+
+    <title>Vite App</title>
+    <!-- Load Atlas App Services -->
+    <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
+  <!-- Load Google One Tap -->
+  <script src="https://accounts.google.com/gsi/client"></script>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1890837681355704',
+        xfbml      : true,
+        version    : 'v20.0'
+      });
+      FB.AppEvents.logPageView();
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

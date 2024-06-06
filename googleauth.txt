@@ -1,0 +1,24 @@
+      
+        
+  const mongodb = app.currentUser.mongoClient("mongodb-atlas");
+  const collection = mongodb.db("todo-app").collection("all-todo");
+  
+  const existingUser = await collection.findOne({ email: googleEmail });
+  console.log(existingUser)
+  // Use email as a standard identifier
+  // Check if user already exists with email/password
+  console.log(existingUser.length)
+  if (existingUser) {
+    console.log("run me exist")
+    // Link Google credentials to the existing user account
+    const emailPasswordCredentials = Realm.Credentials.emailPassword(googleEmail, existingUser.password);
+    await app.logIn(emailPasswordCredentials);
+     // Refresh the current User Data
+  await app?.currentUser?.refreshCustomData();
+  // Set the user value
+  user.value = app?.currentUser;
+  loginError.value = "";
+  }else{
+    loginError.value = "Error during Google authentication. Please try again.";
+    setTimeout(() => { loginError.value = ""; }, 1200);
+  }
