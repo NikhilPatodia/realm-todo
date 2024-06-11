@@ -27,14 +27,17 @@
            data-text="sign_in_with"
            data-logo_alignment="left">
       </div>
-<div class="fb-login-button" 
-     data-width="" 
-     data-size="large" 
-     data-button-type="login_with" 
-     data-layout="default" 
-     data-auto-logout-link="false" 
-     data-use-continue-as="false" 
-     data-onlogin="checkLoginState"></div>
+
+      <!-- Facebook Login Button -->
+      <div class="fb-login-button" 
+           data-width="" 
+           data-size="large" 
+           data-button-type="login_with" 
+           data-layout="default" 
+           data-auto-logout-link="false" 
+           data-use-continue-as="false" 
+           data-onlogin="checkLoginState"></div>
+      
       <p>If you don't have an account? <router-link :to="{ name: 'signup' }">Create Account</router-link></p>
     </form>
   </div>
@@ -44,8 +47,7 @@
 import { useRouter } from 'vue-router';
 import { useAppState } from '../realmState.js';
 import checkForm from '../composables/checkForm.js';
-import * as Realm from "realm-web";
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 
 export default {
   setup() {
@@ -83,61 +85,46 @@ export default {
       }
     };
 
+    const checkLoginState = () => {
+      FB.getLoginStatus(response => {
+        statusChangeCallback(response);
+      });
+    };
+
+    const statusChangeCallback = (response) => {
+      if (response.status === 'connected') {
+        console.log('Logged in.');
+        // Handle successful login
+      } else {
+        console.log('Not authenticated.');
+        loginError.value = "User is not authenticated.";
+      }
+    };
+
     onMounted(() => {
       window.handleCredentialResponse = handleCredentialResponse;
-        window.fbAsyncInit = function() {
-    FB.init({
-      appId: "438289569066138",
-      cookie: true,
-      xfbml: true,
-      version: 'v20.0'
+      window.checkLoginState = checkLoginState;  // Make checkLoginState globally accessible
+
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId: "438289569066138",
+          cookie: true,
+          xfbml: true,
+          version: 'v20.0'
+        });
+
+        FB.AppEvents.logPageView();
+      };
+
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
     });
 
-    FB.AppEvents.logPageView();
-  };
-
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) { return; }
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-
-      
-      
-    });
-    const checkLoginState = () => {
-  FB.getLoginStatus(response => {
-    statusChangeCallback(response);
-  });
-};
-
-const statusChangeCallback = (response) => {
-  if (response.status === 'connected') {
-    console.log('Logged in.');
-  } else {
-    console.log('Not authenticated.');
-  }
-};
-
-    // const loginWithFacebook = () => {
-
-     
-    //   FB.login(async function (response) {
-    //     if (response.authResponse) {
-    //       const accessToken = response.authResponse.accessToken;
-    //       const success = await loginFacebook(accessToken);
-    //       if (success) {
-    //         router.replace('/');
-    //       }
-    //     } else {
-    //       loginError.value = "User cancelled login or did not fully authorize.";
-    //     }
-    //   }, { scope: 'email' });
-    // };
-  
-     
     return {
       handleLogin,
       email,
@@ -153,6 +140,49 @@ const statusChangeCallback = (response) => {
   }
 };
 </script>
+
+<style>
+/* Your CSS styles */
+.color-red {
+  color: red;
+}
+
+.signup-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.signup-form h2 {
+  margin-bottom: 20px;
+}
+
+.signup-form input[type="text"],
+.signup-form input[type="email"],
+.signup-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.signup-form button {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.signup-form button:hover {
+  background-color: #45a049;
+}
+</style>
+
 
 <style>
 /* Your CSS styles */
