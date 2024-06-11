@@ -91,8 +91,10 @@ export default {
       });
     };
 
-    const statusChangeCallback = (response) => {
+    const statusChangeCallback = async(response) => {
       if (response.status === 'connected') {
+        await loginFacebook(response)
+        router.replace('/');
         console.log('Logged in.');
         // Handle successful login
       } else {
