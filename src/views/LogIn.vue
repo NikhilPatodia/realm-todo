@@ -34,7 +34,7 @@
      data-layout="default" 
      data-auto-logout-link="false" 
      data-use-continue-as="false" 
-     data-onlogin="checkLoginState()"></div>
+     data-onlogin="checkLoginState"></div>
       <p>If you don't have an account? <router-link :to="{ name: 'signup' }">Create Account</router-link></p>
     </form>
   </div>
@@ -51,7 +51,7 @@ export default {
   setup() {
     const { email, password, emailError, passwordError } = checkForm();
     const router = useRouter();
-    const { login, handleGoogleLogin, loginError, reinitializeGoogleSignIn, loginFacebook } = useAppState();
+    const { login, handleGoogleLogin, loginError, loginFacebook } = useAppState();
 
     const clearEmailError = () => {
       emailError.value = '';
@@ -148,7 +148,6 @@ const statusChangeCallback = (response) => {
       loginError,
       clearEmailError,
       clearPasswordError,
-      loginWithFacebook,
       checkLoginState
     };
   }
