@@ -10,15 +10,21 @@
     <!-- Load Atlas App Services -->
     <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
   <!-- Load Google One Tap -->
-  <script src="https://accounts.google.com/gsi/client"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+
   <script>
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '1890837681355704',
+        appId      : '438289569066138',
+        cookie     : true,
         xfbml      : true,
         version    : 'v20.0'
       });
-      FB.AppEvents.logPageView();
+        
+      FB.AppEvents.logPageView();   
+        
     };
   
     (function(d, s, id){
@@ -32,8 +38,7 @@
   </head>
   <body>
     <div id="app"></div>
-    
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <div id="fb-root"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

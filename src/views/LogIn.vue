@@ -3,12 +3,12 @@
     <h2>Log In Form</h2>
     <form @submit.prevent="handleLogin">
       <label for="email">Email:</label>
-      <input v-model="email" type="email" id="email" name="email" placeholder="Your email.." required>
+      <input v-model="email" @input="clearEmailError" type="email" id="email" name="email" placeholder="Your email.." required>
       <p class="color-red" v-if="emailError">{{ emailError }}</p>
       <p class="color-red" v-if="loginError">{{ loginError }}</p>
 
       <label for="password">Password:</label>
-      <input v-model="password" type="password" id="password" name="password" placeholder="Your password.." required>
+      <input v-model="password" @input="clearPasswordError" type="password" id="password" name="password" placeholder="Your password.." required>
       <p class="color-red" v-if="passwordError">{{ passwordError }}</p>
 
       <button type="submit">Log In</button>
@@ -27,7 +27,11 @@
            data-text="sign_in_with"
            data-logo_alignment="left">
       </div>
-       <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" @click="loginWithFacebook">Login wtih Facebook</div>
+      
+<fb:login-button 
+  scope="public_profile,email"
+  @click="loginWithFacebook">
+</fb:login-button>
       <p>If you don't have an account? <router-link :to="{ name: 'signup' }">Create Account</router-link></p>
     </form>
   </div>
@@ -38,13 +42,21 @@ import { useRouter } from 'vue-router';
 import { useAppState } from '../realmState.js';
 import checkForm from '../composables/checkForm.js';
 import * as Realm from "realm-web";
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 export default {
   setup() {
     const { email, password, emailError, passwordError } = checkForm();
     const router = useRouter();
     const { login, handleGoogleLogin, loginError, reinitializeGoogleSignIn, loginFacebook } = useAppState();
+
+    const clearEmailError = () => {
+      emailError.value = '';
+    };
+
+    const clearPasswordError = () => {
+      passwordError.value = '';
+    };
 
     const handleLogin = async () => {
       if (email.value === "") {
@@ -53,25 +65,29 @@ export default {
         passwordError.value = "Password is Empty!";
       } else {
         await login(email.value, password.value);
-        emailError.value = "";
-        passwordError.value = "";
-        router.replace('/');
+        if (!loginError.value) {
+          emailError.value = "";
+          passwordError.value = "";
+          router.replace('/');
+        }
       }
     };
- 
+
     const handleCredentialResponse = async (response) => {
-      console.log("run google")
-       await handleGoogleLogin(response);
-       if(!loginError.value){
-         router.replace('/');
-       }
+      await handleGoogleLogin(response);
+      if (!loginError.value) {
+        router.replace('/');
+      }
     };
 
     onMounted(() => {
       window.handleCredentialResponse = handleCredentialResponse;
+      
     });
- const loginWithFacebook = () => {
-    console.log("run facebook")
+
+    const loginWithFacebook = () => {
+
+     
       FB.login(async function (response) {
         if (response.authResponse) {
           const accessToken = response.authResponse.accessToken;
@@ -84,6 +100,8 @@ export default {
         }
       }, { scope: 'email' });
     };
+  
+     
     return {
       handleLogin,
       email,
@@ -92,6 +110,8 @@ export default {
       passwordError,
       handleCredentialResponse,
       loginError,
+      clearEmailError,
+      clearPasswordError,
       loginWithFacebook
     };
   }
@@ -139,6 +159,3 @@ export default {
   background-color: #45a049;
 }
 </style>
-
-
-

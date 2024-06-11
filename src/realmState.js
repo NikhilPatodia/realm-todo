@@ -12,9 +12,53 @@ const forProgress = ref([]);
 const forComplete = ref([]);
 const user = ref(null);
 const loginError = ref("");
+const validForTodo = ref(false);
+const validForProgress = ref(false);
+const validForCompleted = ref(false);
+const newTodo = ref([]);
+const validSearch = ref(false);
+const newProgress = ref([]);
+const newComplete = ref([]);
+const showError = ref("")
+const search = ref("");
 user.value = app?.currentUser;
 export const useAppState = ()=>{
     const isLoggedIn = computed(() => user.value !== null);
+    const BackToLobby = ()=>{
+      validSearch.value = false;
+      validForTodo.value = false;
+      validForCompleted.value = false;
+      validForProgress.value = false
+      showError.value = "";
+
+    }
+    const handleSearch = ()=>{
+      validSearch.value = true;
+      if(search.value === ""){
+          showError.value = "Please Insert Something in Search!";
+      }
+      newTodo.value = forTodo.value.filter((elem)=>{
+       if(elem.title.includes(search.value)){
+        
+        return elem;
+       }
+       });
+      console.log(newTodo.value) 
+      newProgress.value = forProgress.value.filter((elem)=>{
+       if(elem.title.includes(search.value)){
+        return elem;
+       }
+       });
+      newComplete.value = forComplete.value.filter((elem)=>{
+       if(elem.title.includes(search.value)){
+        return elem;
+       }
+       });
+      validForTodo.value = true;
+      validForCompleted.value = true;
+      validForProgress.value = true;
+
+    }
     const changeTask = async(type, currentTrack, id, title, desc)=>{
       const mongodb = app.currentUser.mongoClient("mongodb-atlas");
       const collection = mongodb.db("todo-app").collection("todo-detail");
@@ -26,22 +70,31 @@ export const useAppState = ()=>{
           if(type === "right" && currentTrack === "Todo"){
             await collection.updateOne({_id: id}, {$set: {track:'Progress'}})
             forTodo.value = forTodo.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
-            forProgress.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Progress' })
+            newTodo.value = newTodo.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+            forProgress.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Progress' });
+            newProgress.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Progress' });
           }
           else if(type === "left" && currentTrack === "Progress"){
             await collection.updateOne({_id: id}, {$set: {track:'Todo'}})
             forProgress.value = forProgress.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+            newProgress.value = newProgress.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
             forTodo.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Todo' })
+            newTodo.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Todo' })
+            
           }
           else if(type === "right" && currentTrack === "Progress"){
             await collection.updateOne({_id: id}, {$set: {track:'Completed'}})
             forProgress.value = forProgress.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+            newProgress.value = newProgress.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
             forComplete.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Completed' })
+            newComplete.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Completed' })
           }
           else if(type === "left" && currentTrack === "Completed"){
             await collection.updateOne({_id: id}, {$set: {track:'Progress'}})
             forComplete.value = forComplete.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+            newComplete.value = newComplete.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
             forProgress.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Progress' })
+            newProgress.value.push({_id: id,  title: title, desc: desc, userID: app.currentUser.id, track: 'Progress' })
           }
          
             // Refresh the current user data
@@ -162,12 +215,16 @@ export const useAppState = ()=>{
          await collection.deleteOne({_id: id})
          if(type === "Todo"){
           forTodo.value = forTodo.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+          newTodo.value = newTodo.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+
          }
          else if(type === "Progress"){
           forProgress.value = forProgress.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+          newProgress.value = newProgress.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
          }
          else{
           forComplete.value = forComplete.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
+          newComplete.value = newComplete.value.filter((elem)=>{return (JSON.parse(JSON.stringify(elem._id)) !== JSON.parse(JSON.stringify(id)))});
          }
          
          // Refresh the current user data
@@ -331,7 +388,7 @@ export const useAppState = ()=>{
      }
    } 
 
-   return {isLoggedIn, login, logout, signup, user, addTodo, todoData, defaultData, editTodo, deleteTodo, changeTask, forTodo, forComplete, forProgress, loginError, handleGoogleLogin, app, reinitializeGoogleSignIn, loginFacebook} 
+   return {isLoggedIn, login, logout, signup, user, addTodo, todoData, defaultData, editTodo, deleteTodo, changeTask, forTodo, forComplete, forProgress, loginError, handleGoogleLogin, app, reinitializeGoogleSignIn, loginFacebook, handleSearch,validForTodo, validForProgress, validForCompleted, newTodo, newProgress, newComplete, search,validSearch, BackToLobby, showError} 
 }
 
 
