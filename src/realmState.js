@@ -342,10 +342,11 @@ export const useAppState = ()=>{
     const loginFacebook = async (accessToken) => {
       try {
         const credentials = Realm.Credentials.facebook(accessToken);
-        const facebookUser = await app.logIn(credentials);
+        const facebookUser = await app?.logIn(credentials);
         console.log(facebookUser)
         
-        user.value = app.currentUser;
+        user.value = app?.currentUser;
+        console.log(user.value)
         await app?.currentUser?.refreshCustomData();
         loginError.value = "";
         return true;
