@@ -27,11 +27,14 @@
            data-text="sign_in_with"
            data-logo_alignment="left">
       </div>
-      
-<fb:login-button 
-  scope="public_profile,email"
-  @click="loginWithFacebook">
-</fb:login-button>
+<div class="fb-login-button" 
+     data-width="" 
+     data-size="large" 
+     data-button-type="login_with" 
+     data-layout="default" 
+     data-auto-logout-link="false" 
+     data-use-continue-as="false" 
+     data-onlogin="checkLoginState()"></div>
       <p>If you don't have an account? <router-link :to="{ name: 'signup' }">Create Account</router-link></p>
     </form>
   </div>
@@ -82,24 +85,57 @@ export default {
 
     onMounted(() => {
       window.handleCredentialResponse = handleCredentialResponse;
-      
+        window.fbAsyncInit = function() {
+    FB.init({
+      appId: "438289569066138",
+      cookie: true,
+      xfbml: true,
+      version: 'v20.0'
     });
 
-    const loginWithFacebook = () => {
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) { return; }
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+      
+      
+    });
+    const checkLoginState = () => {
+  FB.getLoginStatus(response => {
+    statusChangeCallback(response);
+  });
+};
+
+const statusChangeCallback = (response) => {
+  if (response.status === 'connected') {
+    console.log('Logged in.');
+  } else {
+    console.log('Not authenticated.');
+  }
+};
+
+    // const loginWithFacebook = () => {
 
      
-      FB.login(async function (response) {
-        if (response.authResponse) {
-          const accessToken = response.authResponse.accessToken;
-          const success = await loginFacebook(accessToken);
-          if (success) {
-            router.replace('/');
-          }
-        } else {
-          loginError.value = "User cancelled login or did not fully authorize.";
-        }
-      }, { scope: 'email' });
-    };
+    //   FB.login(async function (response) {
+    //     if (response.authResponse) {
+    //       const accessToken = response.authResponse.accessToken;
+    //       const success = await loginFacebook(accessToken);
+    //       if (success) {
+    //         router.replace('/');
+    //       }
+    //     } else {
+    //       loginError.value = "User cancelled login or did not fully authorize.";
+    //     }
+    //   }, { scope: 'email' });
+    // };
   
      
     return {
@@ -112,7 +148,8 @@ export default {
       loginError,
       clearEmailError,
       clearPasswordError,
-      loginWithFacebook
+      loginWithFacebook,
+      checkLoginState
     };
   }
 };
