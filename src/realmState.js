@@ -259,7 +259,7 @@ export const useAppState = ()=>{
       }
       // Reinitialize the Google Sign-In button
       google.accounts.id.initialize({
-          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_id: '104231573976-2gras7klqs117s3qvr3tm2k3q8h69h1i.apps.googleusercontent.com',
           callback: handleGoogleLogin,
           context: 'signin',
           itp_support: true
