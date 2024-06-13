@@ -341,11 +341,12 @@ export const useAppState = ()=>{
     }
     const loginFacebook = async (accessToken) => {
       try {
-        console.log("run facebook!", accessToken)
-        const credentials = Realm.Credentials.facebook(accessToken);
-        console.log("this is credentials: " + JSON.stringify(credentials));
-        const facebookUser = await app.logIn(credentials);
+        console.log("Running Facebook login with access token:", accessToken);
     
+        const credentials = Realm.Credentials.facebook(accessToken);
+        console.log("Generated credentials:", JSON.stringify(credentials));
+    
+        const facebookUser = await app.logIn(credentials);
         console.log('Facebook User:', facebookUser);
     
         user.value = app.currentUser;
@@ -355,11 +356,14 @@ export const useAppState = ()=>{
         loginError.value = "";
         return true;
       } catch (error) {
-        console.error('Facebook authentication error:', error);if (error) {
+        console.error('Facebook authentication error:', error);
+        if (error && error.response) {
           console.error('Response status:', error.response.status);
           console.error('Response data:', error.response.data);
+        } else {
+          console.error('Error details:', JSON.stringify(error, null, 2));
         }
-        console.error('Error details:', JSON.stringify(error, null, 2)); 
+    
         loginError.value = "Error during Facebook authentication. Please try again.";
         return false;
       }
