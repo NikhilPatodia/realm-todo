@@ -93,7 +93,7 @@ export default {
 
     const statusChangeCallback = async(response) => {
       if (response.status === 'connected') {
-          const accessToken = response.authResponse.accessToken
+       const { accessToken } = FB.getAuthResponse();
         const success = await loginFacebook(accessToken);
         if (success) {
           router.replace('/');
