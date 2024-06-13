@@ -364,6 +364,7 @@ export const useAppState = ()=>{
         return false;
       }
     };
+    loginFacebook("EAAGOnz4SrJoBOwKH8N52P96wfxAG443P2NCoDn9PzuIxFN9M7UvettSdCvTVxBhcZCY6bIUH6kHPQo4k9jcOMYwFLyXV73hR9Ue1BdMpDfD0MgelyNIQT6FFp4CpHcK9iYfvxIZCssZCFSHGaZBEFqgaocWMNfce3l3UsZCXCO90UyIwW4iD9cknfOYtETp6cg83oSbHfm7OayZBLbgEd0SS3BGWcZD")
    const signup = async(first, last, email, password)=>{
      try {
         //SignUp user
