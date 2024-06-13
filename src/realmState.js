@@ -355,8 +355,11 @@ export const useAppState = ()=>{
         loginError.value = "";
         return true;
       } catch (error) {
-        console.error('Facebook authentication error:', error);
-        console.error('Error details:', JSON.stringify(error, null, 2));
+        console.error('Facebook authentication error:', error);if (error && error.response) {
+          console.error('Response status:', error.response.status);
+          console.error('Response data:', error.response.data);
+        }
+        console.error('Error details:', JSON.stringify(error, null, 2)); 
         loginError.value = "Error during Facebook authentication. Please try again.";
         return false;
       }
