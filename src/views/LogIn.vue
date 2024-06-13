@@ -92,6 +92,7 @@ export default {
     };
 
     const statusChangeCallback = async(response) => {
+      console.log("This is Response: " + response);
       if (response.status === 'connected') {
        const { accessToken } = FB.getAuthResponse();
         const success = await loginFacebook(accessToken);
