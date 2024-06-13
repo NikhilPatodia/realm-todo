@@ -343,7 +343,7 @@ export const useAppState = ()=>{
       try {
         console.log("run facebook!", accessToken)
         const credentials = Realm.Credentials.facebook( accessToken );
-        console.log("this is credentials: " + credentials);
+        console.log("this is credentials: " + JSON.stringify(credentials));
         const facebookUser = await app.logIn(credentials);
     
         console.log('Facebook User:', facebookUser);
