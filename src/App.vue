@@ -11,7 +11,7 @@
         <RouterLink to="/login">Log In</RouterLink>
          <button @click="logOut" class="btn" v-if="currentUser">LogOut</button>
          <div v-if="currentUser === null"></div>
-        <div v-else-if="currentUser.providerType === 'oauth2-google'">Welcome, {{ currentUser.profile.name}}</div>
+        <div v-else-if="currentUser.providerType === 'oauth2-google' || 'oauth2-facebook'">Welcome, {{ currentUser.profile.name}}</div>
         <div v-else>Welcome, {{ currentUser.customData.first }} {{ currentUser.customData.last }}</div>
       </nav>
     </div>
