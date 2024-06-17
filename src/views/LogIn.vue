@@ -28,7 +28,15 @@
            data-logo_alignment="left">
       </div>
 
-    
+      <!-- Facebook Login Button -->
+      <div class="fb-login-button" 
+           data-width="" 
+           data-size="large" 
+           data-button-type="login_with" 
+           data-layout="default" 
+           data-auto-logout-link="false" 
+           data-use-continue-as="false" 
+           data-onlogin="checkLoginState"></div>
       
       <p>If you don't have an account? <router-link :to="{ name: 'signup' }">Create Account</router-link></p>
     </form>

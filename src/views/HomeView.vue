@@ -92,15 +92,6 @@
       <span class="color-red">{{ showError }}</span>
     </div>
     </div>
-      <!-- Facebook Login Button -->
-      <div class="fb-login-button" 
-           data-width="" 
-           data-size="large" 
-           data-button-type="login_with" 
-           data-layout="default" 
-           data-auto-logout-link="false" 
-           data-use-continue-as="false" 
-           data-onlogin="checkLoginState"></div>
 </template>
 <script>
 
@@ -123,50 +114,9 @@ export default {
     const completeUp = ref(true);
   
     const isProcessing = ref(false);
-    const {addTodo, todoData, defaultData, editTodo, deleteTodo, changeTask, forTodo, forComplete, forProgress,handleSearch,validForTodo, validForProgress, validForCompleted, newTodo, newProgress, newComplete, search,validSearch, BackToLobby, showError, loginFacebook} = useAppState();
-          const checkLoginState = () => {
-     FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-});;
-    };
-
-    const statusChangeCallback = async(response) => {
-      console.log("This is Response: " + response);
-      if (response.status === 'connected') {
-       const { accessToken } = FB.getAuthResponse();
-        const success = await loginFacebook(accessToken);
-        if (success) {
-          router.replace('/');
-        }
-        console.log('Logged in.');
-        // Handle successful login
-      } else {
-        console.log('Not authenticated.');
-        loginError.value = "User is not authenticated.";
-      }
-    }
+    const {addTodo, todoData, defaultData, editTodo, deleteTodo, changeTask, forTodo, forComplete, forProgress,handleSearch,validForTodo, validForProgress, validForCompleted, newTodo, newProgress, newComplete, search,validSearch, BackToLobby, showError} = useAppState();
     onMounted(async()=>{
       await defaultData();
-        window.checkLoginState = checkLoginState;  // Make checkLoginState globally accessible
-
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId: "438289569066138",
-          cookie: true,
-          xfbml: true,
-          version: 'v20.0'
-        });
-
-        FB.AppEvents.logPageView();
-      };
-
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
     })
     const edit = (tit, des, id, typo)=>{
       
@@ -332,8 +282,8 @@ export default {
       completeUp.value = true;
     }
    }
-
-    return {  title, desc , addtodo, todoData, titleError, handleChange, edit, deleteId, changeTask, forTodo, forComplete, forProgress, isProcessing, search, handleSearch, validSearch,validForTodo, validForProgress, validForCompleted, newTodo, newProgress, newComplete, BackToLobby, todoArrow, progressArrow, completeArrow, todoUp, progressUp, completeUp, handleSorting, showError, checkLoginState};
+   
+    return {  title, desc , addtodo, todoData, titleError, handleChange, edit, deleteId, changeTask, forTodo, forComplete, forProgress, isProcessing, search, handleSearch, validSearch,validForTodo, validForProgress, validForCompleted, newTodo, newProgress, newComplete, BackToLobby, todoArrow, progressArrow, completeArrow, todoUp, progressUp, completeUp, handleSorting, showError};
   }
 };
 </script>
