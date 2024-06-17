@@ -27,7 +27,7 @@ import {useAppState} from './realmState.js'
 
 export default {
   setup() {
-    const {logout, user} = useAppState();
+    const {logout, user, reinitializeGoogleSignIn} = useAppState();
    const currentUser = ref(null);
    currentUser.value = user.value;
    const router = useRouter();
@@ -42,6 +42,7 @@ export default {
    })
    
    const logOut = async()=>{
+     await reinitializeGoogleSignIn();
     await logout();
     router.replace('/login');
 
