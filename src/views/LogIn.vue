@@ -142,7 +142,7 @@ export default {
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     });
-    watch(route, () => {
+    watch(router, () => {
       initializeGoogleSignIn();
       initializeFacebookSignIn();
     });
