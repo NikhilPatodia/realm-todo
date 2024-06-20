@@ -14,13 +14,13 @@
       <button type="submit">Log In</button>
 
       <!-- Google Sign-In Button -->
-      <div v-if="showButton" id="g_id_onload"
+      <div  id="g_id_onload"
            data-client_id="104231573976-2gras7klqs117s3qvr3tm2k3q8h69h1i.apps.googleusercontent.com"
            data-context="signin"
            data-callback="handleCredentialResponse"
            data-itp_support="true">
       </div>
-      <div v-if="showButton" class="g_id_signin"
+      <div  class="g_id_signin"
            data-type="standard"
            data-size="large"
            data-theme="outline"
@@ -29,7 +29,7 @@
       </div>
 
       <!-- Facebook Login Button -->
-      <div v-if="showButton" class="fb-login-button" 
+      <div class="fb-login-button" 
            data-width="" 
            data-size="large" 
            data-button-type="login_with" 
@@ -62,7 +62,19 @@ export default {
     const clearPasswordError = () => {
       passwordError.value = '';
     };
-
+    const initializeGoogleSignIn = ()=> {
+      if (window.google && window.google.accounts) {
+        window.google.accounts.id.initialize({
+          client_id: 'YOUR_GOOGLE_CLIENT_ID',
+          callback: this.handleCredentialResponse
+        });
+        window.google.accounts.id.renderButton(
+          document.getElementById('g_id_signin'),
+          { theme: 'outline', size: 'large' }
+        );
+        window.google.accounts.id.prompt(); // display the One Tap dialog
+      }
+    }
     const handleLogin = async () => {
       if (email.value === "") {
         emailError.value = "Email Address is Empty!";
@@ -110,7 +122,7 @@ export default {
     onMounted(() => {
       window.handleCredentialResponse = handleCredentialResponse;
       window.checkLoginState = checkLoginState;  // Make checkLoginState globally accessible
-
+      initializeGoogleSignIn();
       window.fbAsyncInit = function() {
         FB.init({
           appId: "438289569066138",
