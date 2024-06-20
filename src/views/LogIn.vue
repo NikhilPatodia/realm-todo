@@ -47,7 +47,7 @@
 import { useRouter } from 'vue-router';
 import { useAppState } from '../realmState.js';
 import checkForm from '../composables/checkForm.js';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 export default {
   setup() {
