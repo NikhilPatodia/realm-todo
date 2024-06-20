@@ -14,13 +14,13 @@
       <button type="submit">Log In</button>
 
       <!-- Google Sign-In Button -->
-      <div  id="g_id_onload"
+      <div id="g_id_onload"
            data-client_id="104231573976-2gras7klqs117s3qvr3tm2k3q8h69h1i.apps.googleusercontent.com"
            data-context="signin"
            data-callback="handleCredentialResponse"
            data-itp_support="true">
       </div>
-      <div  class="g_id_signin"
+      <div class="g_id_signin"
            data-type="standard"
            data-size="large"
            data-theme="outline"
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useAppState } from '../realmState.js';
 import checkForm from '../composables/checkForm.js';
 import { onMounted, ref, watch } from 'vue';
@@ -53,8 +53,10 @@ export default {
   setup() {
     const { email, password, emailError, passwordError } = checkForm();
     const router = useRouter();
+    const route = useRoute();
     const { login, handleGoogleLogin, loginError, loginFacebook } = useAppState();
     const showButton = ref(true);
+
     const clearEmailError = () => {
       emailError.value = '';
     };
@@ -62,11 +64,12 @@ export default {
     const clearPasswordError = () => {
       passwordError.value = '';
     };
-    const initializeGoogleSignIn = ()=> {
+
+    const initializeGoogleSignIn = () => {
       if (window.google && window.google.accounts) {
         window.google.accounts.id.initialize({
           client_id: '104231573976-2gras7klqs117s3qvr3tm2k3q8h69h1i.apps.googleusercontent.com',
-          callback: handleCredentialResponse
+          callback: handleCredentialResponse,
         });
         window.google.accounts.id.renderButton(
           document.getElementById('g_id_signin'),
@@ -74,7 +77,14 @@ export default {
         );
         window.google.accounts.id.prompt(); // display the One Tap dialog
       }
-    }
+    };
+
+    const initializeFacebookSignIn = () => {
+      if (window.FB) {
+        window.FB.XFBML.parse();
+      }
+    };
+
     const handleLogin = async () => {
       if (email.value === "") {
         emailError.value = "Email Address is Empty!";
@@ -98,21 +108,20 @@ export default {
     };
 
     const checkLoginState = () => {
-     FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-});;
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
     };
 
-    const statusChangeCallback = async(response) => {
+    const statusChangeCallback = async (response) => {
       console.log("This is Response: " + response);
       if (response.status === 'connected') {
-       const { accessToken } = FB.getAuthResponse();
+        const { accessToken } = FB.getAuthResponse();
         const success = await loginFacebook(accessToken);
         if (success) {
           router.replace('/');
         }
         console.log('Logged in.');
-        // Handle successful login
       } else {
         console.log('Not authenticated.');
         loginError.value = "User is not authenticated.";
@@ -121,16 +130,15 @@ export default {
 
     onMounted(() => {
       window.handleCredentialResponse = handleCredentialResponse;
-      window.checkLoginState = checkLoginState;  // Make checkLoginState globally accessible
+      window.checkLoginState = checkLoginState; // Make checkLoginState globally accessible
       initializeGoogleSignIn();
       window.fbAsyncInit = function() {
         FB.init({
           appId: "438289569066138",
           cookie: true,
           xfbml: true,
-          version: 'v20.0'
+          version: 'v20.0',
         });
-
         FB.AppEvents.logPageView();
       };
 
@@ -142,7 +150,8 @@ export default {
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
     });
-    watch(router, () => {
+
+    watch(route, () => {
       initializeGoogleSignIn();
       initializeFacebookSignIn();
     });
@@ -158,56 +167,13 @@ export default {
       clearEmailError,
       clearPasswordError,
       checkLoginState,
-      showButton
+      showButton,
     };
-  }
+  },
 };
 </script>
 
-<style>
-/* Your CSS styles */
-.color-red {
-  color: red;
-}
-
-.signup-form {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.signup-form h2 {
-  margin-bottom: 20px;
-}
-
-.signup-form input[type="text"],
-.signup-form input[type="email"],
-.signup-form input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.signup-form button {
-  width: 100%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.signup-form button:hover {
-  background-color: #45a049;
-}
-</style>
-
-
-<style>
+<style scoped>
 /* Your CSS styles */
 .color-red {
   color: red;
