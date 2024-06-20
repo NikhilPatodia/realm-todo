@@ -14,13 +14,13 @@
       <button type="submit">Log In</button>
 
       <!-- Google Sign-In Button -->
-      <div id="g_id_onload"
+      <div v-if="showButton" id="g_id_onload"
            data-client_id="104231573976-2gras7klqs117s3qvr3tm2k3q8h69h1i.apps.googleusercontent.com"
            data-context="signin"
            data-callback="handleCredentialResponse"
            data-itp_support="true">
       </div>
-      <div class="g_id_signin"
+      <div v-if="showButton" class="g_id_signin"
            data-type="standard"
            data-size="large"
            data-theme="outline"
@@ -29,7 +29,7 @@
       </div>
 
       <!-- Facebook Login Button -->
-      <div class="fb-login-button" 
+      <div v-if="showButton" class="fb-login-button" 
            data-width="" 
            data-size="large" 
            data-button-type="login_with" 
@@ -54,7 +54,7 @@ export default {
     const { email, password, emailError, passwordError } = checkForm();
     const router = useRouter();
     const { login, handleGoogleLogin, loginError, loginFacebook } = useAppState();
-
+    const showButton = ref(true);
     const clearEmailError = () => {
       emailError.value = '';
     };
@@ -141,7 +141,8 @@ export default {
       loginError,
       clearEmailError,
       clearPasswordError,
-      checkLoginState
+      checkLoginState,
+      showButton
     };
   }
 };
