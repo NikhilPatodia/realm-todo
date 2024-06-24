@@ -131,7 +131,7 @@ export default {
     onMounted(() => {
       window.handleCredentialResponse = handleCredentialResponse;
       window.checkLoginState = checkLoginState; // Make checkLoginState globally accessible
-      initializeGoogleSignIn();
+      // initializeGoogleSignIn();
       window.fbAsyncInit = function() {
         FB.init({
           appId: "438289569066138",
@@ -151,10 +151,10 @@ export default {
       }(document, 'script', 'facebook-jssdk'));
     });
 
-    watch(route, () => {
-      initializeGoogleSignIn();
-      initializeFacebookSignIn();
-    });
+    // watch(route, () => {
+    //   initializeGoogleSignIn();
+    //   initializeFacebookSignIn();
+    // });
 
     return {
       handleLogin,
