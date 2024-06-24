@@ -65,26 +65,8 @@ export default {
       passwordError.value = '';
     };
 
-    const initializeGoogleSignIn = () => {
-      if (window.google && window.google.accounts) {
-        window.google.accounts.id.initialize({
-          client_id: '104231573976-2gras7klqs117s3qvr3tm2k3q8h69h1i.apps.googleusercontent.com',
-          callback: handleCredentialResponse,
-        });
-        window.google.accounts.id.renderButton(
-          document.getElementById('g_id_signin'),
-          { theme: 'outline', size: 'large' }
-        );
-        window.google.accounts.id.prompt(); // display the One Tap dialog
-      }
-    };
-
-    const initializeFacebookSignIn = () => {
-      if (window.FB) {
-        window.FB.XFBML.parse();
-      }
-    };
-
+  
+ 
     const handleLogin = async () => {
       if (email.value === "") {
         emailError.value = "Email Address is Empty!";
@@ -127,8 +109,20 @@ export default {
         loginError.value = "User is not authenticated.";
       }
     };
-
+    const initializeSDKs = () => {
+        // Initialize Google One Tap
+        if (window.google && window.google.accounts) {
+        window.google.accounts.id.initialize({
+          client_id: "104231573976-2gras7klqs117s3qvr3tm2k3q8h69h1i.apps.googleusercontent.com",
+          callback: (response) => handleCredentialResponse(response)
+        });
+        window.google.accounts.id.prompt();
+      } else {
+        console.error('Google One Tap SDK not loaded.');
+      }
+    }
     onMounted(() => {
+      initializeSDKs();
       window.handleCredentialResponse = handleCredentialResponse;
       window.checkLoginState = checkLoginState; // Make checkLoginState globally accessible
     })
