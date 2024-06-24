@@ -48,6 +48,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useAppState } from '../realmState.js';
 import checkForm from '../composables/checkForm.js';
 import { onMounted, ref, watch } from 'vue';
+import { initializeGoogleOneTap } from '../main'; 
 
 export default {
   setup() {
@@ -112,6 +113,7 @@ export default {
 
     onMounted(() => {
       window.handleCredentialResponse = handleCredentialResponse;
+      initializeGoogleOneTap();
       window.checkLoginState = checkLoginState; // Make checkLoginState globally accessible
     })
 

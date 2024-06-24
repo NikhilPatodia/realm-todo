@@ -11,17 +11,6 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(FacebookPlugin);
-
-app.use(router)
-
-
-
-// Example handler for Google One Tap response
-// function handleCredentialResponse(response) {
-//   console.log('Google One Tap response:', response);
-//   // Handle the response as needed
-// }
-app.mount('#app')
 // Initialize Google One Tap after mounting the app
 initializeGoogleOneTap();
 
@@ -36,3 +25,9 @@ export function initializeGoogleOneTap() {
     });
   }
 }
+function handleCredentialResponse(response) {
+    console.log('Google One Tap response:', response);
+    // Handle the response as needed
+  }
+app.use(router)
+app.mount('#app')
