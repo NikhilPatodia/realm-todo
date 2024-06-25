@@ -3,7 +3,6 @@ import HomeView from '../views/HomeView.vue'
 import LogIn from '../views/LogIn.vue'
 import SignUp from '../views/SignUp.vue'
 import { useAppState } from '@/realmState'
-import { initializeGoogleOneTap } from '../main'; 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -55,10 +54,6 @@ router.beforeEach((to, from, next)=>{
 
   next();
 })
-router.beforeEach((to, from, next) => {
-  // Reinitialize Google One Tap on route change
-  initializeGoogleOneTap();
-  next();
-});
+
 
 export default router
